@@ -1,0 +1,83 @@
+hr {
+    border: 0;
+    height: 1px;
+    background-color : #4C6793;
+    margin: 0;  /* Taki upar niche koi bhi additional space na ho . Jb hum sirf <hr> tag lga rhe the to vo navbar kr niche thodi distance me add ho rha tha*/
+}
+
+.custom-button {
+    background-color: #1F2937;
+}
+
+
+.texty {
+    color: #4C6793; /* Custom color for Tasky text */
+}
+
+/* Customizing the tilted arrow sign of dropdown box */
+.custom-button.dropdown-toggle::after {
+    color: white;
+}
+
+/* Customizing the background color of dropdown-box */
+.custom-dropdown-menu {
+  background-color: #1F2937;
+}
+
+/* Customizing the hover color of the dropdown items */
+.custom-dropdown-menu .dropdown-item:hover {
+    background-color: black; 
+}
+
+/* Hamare border me custom color add krega */
+/* We use the !important flag in the CSS to make sure the custom border color overrides any other border color settings. */
+.custom-border-color {
+  border-color: rgba(76, 103, 147, 0.3)  !important;
+}
+
+ /* Custom shadow color */
+ .custom-shadow {
+    box-shadow: 0 4px 8px rgba(76, 103, 147, 0.7); /* Custom shadow with 70% opacity */
+}
+
+/* hum custom margin add krege */
+@media (max-width: 991.98px) {
+    .custom-margin {
+        margin-top: 10px; 
+    }
+}
+
+/* Light mode CSS */
+.light-mode .bg-black {
+    background-color: white !important;
+}
+
+.light-mode .navbar {
+    background-color: white !important;
+}
+
+.light-mode .card {
+    background-color: white !important;
+    color: black;
+}
+
+.light-mode .modal-content {
+    background-color: white !important;
+}
+
+.light-mode .modal-body .form-control {
+    background-color: white !important;
+    color: black !important;
+}
+
+/* .light-mode .modal-body .texty {
+    color: black !important;
+} */
+
+.light-mode {
+    background-color: white !important;
+}
+
+.light-mode .change-black {
+  color: black !important;
+}

@@ -1,0 +1,243 @@
+Why Use ::after:
+----------------
+Bootstrap's Implementation: Bootstrap uses the ::after pseudo-element to add the dropdown icon automatically. This avoids adding extra HTML for the icon.
+Customization: By targeting ::after, you can change the icon's appearance without altering the HTML structure.
+
+Customizing the Dropdown Toggle Icon:
+
+The CSS rule .custom-button.dropdown-toggle::after targets the ::after pseudo-element of any element with both custom-button and dropdown-toggle classes.
+color: white; sets the color of the dropdown toggle icon to white.
+
+Understanding ::after Pseudo-element
+In CSS, the ::after pseudo-element is used to insert content after an element's actual content. It's often used for decorative purposes, such as adding icons or other visual elements that don't need to be part of the HTML markup.
+
+Bootstrap and the Dropdown Toggle Icon
+In Bootstrap, the dropdown toggle icon (the downward-facing arrow) is not added directly in the HTML. Instead, Bootstrap uses the ::after pseudo-element to add this icon. This keeps the HTML clean and allows for easy styling via CSS.
+
+How It Works
+Bootstrap Dropdown Toggle Button: When you add the dropdown-toggle class to a button, Bootstrap's CSS automatically adds a ::after pseudo-element to this button. This pseudo-element contains the dropdown icon.
+
+Customizing the Icon Color: By targeting the ::after pseudo-element with CSS, you can customize the appearance of the dropdown icon. In this case, you want to change its color to white.
+
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+ 
+First -> 1 data save ho jaise hi save changes kre modal me
+
+we Need to Add our tasks that whenever we save the changes the Task card is created.
+ANd we will give id to each card because hum bhot sare tasks card create krege phir uski id hogi to hum paticular task ko manipulate bhi kr  sakte hai.
+${Date.now()}-> It generates the unique id and if we know that something is changing dynamically the we use ${}.
+
+iske andar humne savechange so changes save ho. and humne addEventListener se click function to display on the console.
+
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+second -> 2 Card Display ho save Changes krte hi
+
+-> so task-container se hum dynamically card bnayege 
+
+-> uske baad hume nye card ko just after insert krna hai phele card se so we will use "insertAdjacentHTML".
+
+insertAdjacentHTML is a JavaScript method used to insert HTML content relative to a specified element. It provides a way to dynamically add HTML content to a webpage.
+
+The insertAdjacentHTML method takes two parameters:
+
+position: Specifies the position where the HTML should be inserted relative to the specified element. It can be one of the following values:
+
+"beforebegin": Inserts the HTML immediately before the specified element.
+"afterbegin": Inserts the HTML as the first child of the specified element.
+"beforeend": Inserts the HTML as the last child of the specified element.
+"afterend": Inserts the HTML immediately after the specified element.
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+Third -> 3 we will store the card data in the local storage
+
+// it is necessary to provide the id "bacuse it ensures the data is stored in this local storeage only"
+globalStore.push(taskData);
+localStorage.setItem( "taskly" ,globalStore);
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+Fourth -> 4 
+
+localStorage.setItem( "taskly" ,globalStore); -> this will show object of object in the local storage 
+
+SO we have to convert it into the json format so that we can have actual data 
+localStorage.setItem( "taskly", json.stringify({cards:globalStore}));
+
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+
+Fifth -> 5 
+
+loadInitialCardData() and include in the HTML body
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+sixth -> 6
+
+taskContainer.insertAdjacentHTML("beforeend" , newCard);
+
+newCard is not working we have to create the generateCard() function and we will delete the newCard from savechange and copy it into generateCard.
+
+ // const newCard = `
+
+    // <div class="card bg-black mt-5 border border-opacity-25 custom-border-color custom-shadow" id="${taskData.id}">
+    //     <div class="card-header border border-opacity-25 custom-border-color">
+    //     <div class="button d-flex justify-content-end gap-2"> 
+
+    //         <button type="button" class="btn btn-outline-success"><i class="fa-solid fa-pen-to-square fa-beat-fade"></i></button>
+    //         <button type="button" class="btn btn-outline-danger"><i class="fa-regular fa-trash-can fa-beat-fade"></i></i></button>
+
+    //     </div>
+    //     </div>
+    //     <div class="card-body">
+    //     <h4 class="card-title texty">${taskData.tasktitle}</h4>
+    //     <p class="card-text text-white">${taskData.taskdescription}</p>
+    //     <a href="#" class="btn custom-button">
+    //         <i class="fa-solid fa-check-to-slot fa-beat-fade" style="color: #edeff2;"></i>
+    //         <span class="text-white ms-2">${taskData.taskSessions}</span>
+    //     </a>
+    //     </div>
+    // </div>
+
+    // `;
+
+ -------------------------------------------------------------------------------------------------------------------------------------------   
+
+ Seventh 7 -> Delete Task 
+
+
+ 
+ Humnne delete button me eventHandler lagaya and  onclick="deleteCard('${taskData.id}') and task id se vo task delete krega globalStore and localStorage ko bhi update krega
+
+ const deleteCard = (id) => {
+    const card = document.getElementById(id);
+    taskContainer.removeChild(card);
+
+    const updatedGlobalStore = globalStore.filter((task) => task.id !== id);
+    globalStore.length = 0;
+    globalStore.push(...updatedGlobalStore);
+
+    localStorage.setItem("taskly", JSON.stringify({ cards: globalStore }));
+};
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+
+Eight 8 -> Edit Task
+
+Edit Task krne ke liye Modal open krna hoga and save changes krte hi changes save ho jaye global store and localStorage me bhi update ho jaye
+
+let currentEditingId = null; // ye define krege taki edit krne vali id null. 
+
+
+//edit krege onclick eventHandler lagaya hai button me
+const editCard = (id) => {
+    currentEditingId = id;
+    const card = globalStore.find((task) => task.id === id);
+    document.getElementById("taskTitle").value = card.tasktitle;
+    document.getElementById("taskDescription").value = card.taskdescription;
+    document.getElementById("inputGroupSelect").value = card.taskSessions;
+
+    const modal = new bootstrap.Modal(document.getElementById('exampleModal'));
+    modal.show();
+};
+
+uske baad savechanges me se changes ko save krege.
+To isliye humne phle sirf else vali condition rakhi thi but now if else block lga kr agr edit krna hai to if condition nhi to else me new task hoga .
+
+if (currentEditingId) {
+        //Hum  Update krege  the existing card
+        const card = document.getElementById(currentEditingId);
+        card.querySelector(".card-title").textContent = taskData.tasktitle;
+        card.querySelector(".card-text").textContent = taskData.taskdescription;
+        card.querySelector(".btn.custom-button .ms-2").textContent = taskData.taskSessions;
+
+        const cardIndex = globalStore.findIndex((card) => card.id === currentEditingId);
+        globalStore[cardIndex] = taskData;
+        currentEditingId = null;
+    }else {
+        // NHI to nya card bnayege
+        taskContainer.insertAdjacentHTML("beforeend", generateNewCard(taskData));
+
+        // hum chahte hai card just after previous card ke baad push ho 
+        // but why we are pushing it in array then in localStorage 
+        // 1 because we can't directly push the object in the local storage 
+        // 2 it is good to first push the updated value in the array and then push in local storage
+        globalStore.push(taskData);
+
+    }
+
+    // localStorage.setItem( "taskly" ,globalStore); 
+    localStorage.setItem("taskly" , JSON.stringify({cards : globalStore}));
+}
+
+ currentEditingId = null; // taki id vapas se null ho jaye editing ke baad .
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+Ninth 9 -> Light and Dark mode 
+
+Wrote the CSS part for the light mode and add the event on sun and moon button .
+
+
+document.addEventListener ("DOMContentLoaded" , function () {
+
+    const saveChangeButton = document.getElementById("saveChange");
+    saveChangeButton.addEventListener("click", saveChanges);
+
+    const lightModeButton = document.getElementById("lightModeButton");
+    const darkModeButton = document.getElementById("darkModeButton");
+
+    lightModeButton.addEventListener("click", () => {
+        document.body.classList.add("light-mode");
+    });
+
+    darkModeButton.addEventListener("click", () => {
+        document.body.classList.remove("light-mode");
+    });
+
+    // loadInitialCardData();
+})
+
+
+But the problem face kr rhe the ki refresh krne me vaps se dark mode aa rha tha. Isliye "localStorage" me save kiye.
+
+document.addEventListener ("DOMContentLoaded" , function () {
+
+    const saveChangeButton = document.getElementById("saveChange");
+    saveChangeButton.addEventListener("click", saveChanges);
+
+    const lightModeButton = document.getElementById("lightModeButton");
+    const darkModeButton = document.getElementById("darkModeButton");
+
+    lightModeButton.addEventListener("click", () => {
+        document.body.classList.add("light-mode");
+        // But refresh krne pr dark-mode me switch ho ja rha tha isliye local Storage me store kiye
+        localStorage.setItem("mode", "light"); // Store the mode in localStorage
+    });
+
+    darkModeButton.addEventListener("click", () => {
+        document.body.classList.remove("light-mode");
+        localStorage.setItem("mode", "dark"); // Store the mode in localStorage
+    });
+
+
+    // Check if mode is stored in localStorage
+    const mode = localStorage.getItem("mode");
+    if (mode === "light") {
+        document.body.classList.add("light-mode");
+    } else {
+        document.body.classList.remove("light-mode");
+    }
+
+
+    // loadInitialCardData();
+})
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+
